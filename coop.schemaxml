@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemadesigner version="6.5">
+<source>
+<database charset="latin1" collation="latin1_swedish_ci">coop</database>
+</source>
+<canvas zoom="75">
+<tables>
+<table name="collectioncenteres" view="colnames">
+<left>121</left>
+<top>343</top>
+<width>97</width>
+<height>148</height>
+<sql_create_table>CREATE TABLE `collectioncenteres` (
+  `centerid` int(11) NOT NULL AUTO_INCREMENT,
+  `centername` varchar(50) DEFAULT NULL,
+  `dateadded` datetime DEFAULT NULL,
+  `addedby` int(11) DEFAULT NULL,
+  `deleted` tinyint(1) DEFAULT NULL,
+  `lastmodifiedon` datetime DEFAULT NULL,
+  `lastmodifiedby` int(11) DEFAULT NULL,
+  PRIMARY KEY (`centerid`),
+  KEY `addedby` (`addedby`),
+  KEY `lastmodifiedby` (`lastmodifiedby`),
+  CONSTRAINT `collectioncenteres_ibfk_1` FOREIGN KEY (`addedby`) REFERENCES `users` (`userid`),
+  CONSTRAINT `collectioncenteres_ibfk_2` FOREIGN KEY (`lastmodifiedby`) REFERENCES `users` (`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="collections" view="colnames">
+<left>13</left>
+<top>154</top>
+<width>109</width>
+<height>173</height>
+<sql_create_table>CREATE TABLE `collections` (
+  `collectionid` int(11) NOT NULL AUTO_INCREMENT,
+  `memberid` int(11) DEFAULT NULL,
+  `collectioncenterid` int(11) DEFAULT NULL,
+  `quantity` float DEFAULT NULL,
+  `addedby` int(11) DEFAULT NULL,
+  `dateadded` datetime DEFAULT NULL,
+  `narration` varchar(50) DEFAULT NULL,
+  `billed` tinyint(1) DEFAULT NULL,
+  `voucherid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`collectionid`),
+  KEY `memberid` (`memberid`),
+  KEY `collectioncenterid` (`collectioncenterid`),
+  KEY `addedby` (`addedby`),
+  CONSTRAINT `collections_ibfk_1` FOREIGN KEY (`memberid`) REFERENCES `membersdetails` (`memberid`),
+  CONSTRAINT `collections_ibfk_2` FOREIGN KEY (`collectioncenterid`) REFERENCES `collectioncenteres` (`centerid`),
+  CONSTRAINT `collections_ibfk_3` FOREIGN KEY (`addedby`) REFERENCES `users` (`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="membersdetails" view="colnames">
+<left>254</left>
+<top>199</top>
+<width>109</width>
+<height>233</height>
+<sql_create_table>CREATE TABLE `membersdetails` (
+  `memberid` int(11) NOT NULL AUTO_INCREMENT,
+  `firstname` varchar(50) DEFAULT NULL,
+  `middlename` varchar(50) DEFAULT NULL,
+  `lastname` varchar(50) DEFAULT NULL,
+  `gender` varchar(50) DEFAULT NULL,
+  `idno` varchar(50) DEFAULT NULL,
+  `dateofbirth` datetime DEFAULT NULL,
+  `registrationdate` datetime DEFAULT NULL,
+  `addedby` int(11) DEFAULT NULL,
+  `mobile` varchar(50) DEFAULT NULL,
+  `email` varchar(50) DEFAULT NULL,
+  `postaladdress` varchar(50) DEFAULT NULL,
+  `physicallocation` varchar(50) DEFAULT NULL,
+  `status` varchar(50) DEFAULT NULL,
+  `collectioncenterid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`memberid`),
+  KEY `addedby` (`addedby`),
+  KEY `collectioncenterid` (`collectioncenterid`),
+  CONSTRAINT `membersdetails_ibfk_1` FOREIGN KEY (`addedby`) REFERENCES `users` (`userid`),
+  CONSTRAINT `membersdetails_ibfk_2` FOREIGN KEY (`collectioncenterid`) REFERENCES `collectioncenteres` (`centerid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="objects" view="colnames">
+<left>-2</left>
+<top>6</top>
+<width>81</width>
+<height>84</height>
+<sql_create_table>CREATE TABLE `objects` (
+  `objectid` int(11) NOT NULL AUTO_INCREMENT,
+  `description` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`objectid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="paymentmethods" view="colnames">
+<left>408</left>
+<top>202</top>
+<width>112</width>
+<height>84</height>
+<sql_create_table>CREATE TABLE `paymentmethods` (
+  `paymentmethodid` int(11) NOT NULL AUTO_INCREMENT,
+  `description` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`paymentmethodid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="paymentvoucherdetails" view="colnames">
+<left>384</left>
+<top>352</top>
+<width>114</width>
+<height>110</height>
+<sql_create_table>CREATE TABLE `paymentvoucherdetails` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `paymentvoucherid` int(11) DEFAULT NULL,
+  `memberid` int(11) DEFAULT NULL,
+  `amount` decimal(10,0) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `paymentvoucherid` (`paymentvoucherid`),
+  KEY `memberid` (`memberid`),
+  CONSTRAINT `paymentvoucherdetails_ibfk_1` FOREIGN KEY (`paymentvoucherid`) REFERENCES `paymentvouchers` (`voucherid`),
+  CONSTRAINT `paymentvoucherdetails_ibfk_2` FOREIGN KEY (`memberid`) REFERENCES `membersdetails` (`memberid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="paymentvouchers" view="colnames">
+<left>355</left>
+<top>11</top>
+<width>116</width>
+<height>148</height>
+<sql_create_table>CREATE TABLE `paymentvouchers` (
+  `voucherid` int(11) NOT NULL AUTO_INCREMENT,
+  `voucherno` varchar(50) DEFAULT NULL,
+  `voucherdate` datetime DEFAULT NULL,
+  `addedby` int(11) DEFAULT NULL,
+  `status` varchar(50) DEFAULT NULL,
+  `paymentmethodid` int(11) DEFAULT NULL,
+  `paymentmethodref` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`voucherid`),
+  KEY `addedby` (`addedby`),
+  KEY `paymentmethodid` (`paymentmethodid`),
+  CONSTRAINT `paymentvouchers_ibfk_1` FOREIGN KEY (`addedby`) REFERENCES `users` (`userid`),
+  CONSTRAINT `paymentvouchers_ibfk_2` FOREIGN KEY (`paymentmethodid`) REFERENCES `paymentmethods` (`paymentmethodid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="privileges" view="colnames">
+<left>94</left>
+<top>6</top>
+<width>80</width>
+<height>135</height>
+<sql_create_table>CREATE TABLE `privileges` (
+  `privilegeid` int(11) NOT NULL AUTO_INCREMENT,
+  `objectid` int(11) DEFAULT NULL,
+  `userid` int(11) DEFAULT NULL,
+  `valid` tinyint(1) DEFAULT NULL,
+  `dateadded` datetime DEFAULT NULL,
+  `addedby` int(11) DEFAULT NULL,
+  PRIMARY KEY (`privilegeid`),
+  KEY `objectid` (`objectid`),
+  KEY `userid` (`userid`),
+  CONSTRAINT `privileges_ibfk_1` FOREIGN KEY (`objectid`) REFERENCES `objects` (`objectid`),
+  CONSTRAINT `privileges_ibfk_2` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`),
+  CONSTRAINT `privileges_ibfk_3` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="users" view="colnames">
+<left>197</left>
+<top>7</top>
+<width>140</width>
+<height>173</height>
+<sql_create_table>CREATE TABLE `users` (
+  `userid` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) DEFAULT NULL,
+  `password` varchar(50) DEFAULT NULL,
+  `firstname` varchar(50) DEFAULT NULL,
+  `lastname` varchar(50) DEFAULT NULL,
+  `email` varchar(50) DEFAULT NULL,
+  `mobile` varchar(50) DEFAULT NULL,
+  `changepasswordonlogon` tinyint(1) DEFAULT NULL,
+  `accountactive` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+</tables>
+</canvas>
+</schemadesigner>
